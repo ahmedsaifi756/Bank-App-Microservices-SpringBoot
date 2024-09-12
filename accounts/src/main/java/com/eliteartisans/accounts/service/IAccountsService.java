@@ -5,7 +5,6 @@ import com.eliteartisans.accounts.dto.CustomerDto;
 public interface IAccountsService {
 	
 	/**
-	 * 
 	 * @param customerDto- CustomerDto Object
 	 */
 	void createAccount(CustomerDto customerDto);
@@ -15,4 +14,9 @@ public interface IAccountsService {
 	 * @return Accounts details based on mobile Number
 	 */
 	CustomerDto fetchAccount(String mobileNumer);
+	/**
+	 *  @param customerDto input customer DTO details
+	 * @return true/false based on requirement
+	 */	
+	boolean updateAccount(CustomerDto customerDto);
 }
