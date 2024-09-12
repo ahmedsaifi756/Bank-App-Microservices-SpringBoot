@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
 import com.eliteartisans.accounts.constants.AccountsConstants;
@@ -30,8 +31,6 @@ public class AccountsServiceImpl implements IAccountsService {
 		this.accountsRepository = accountsRepository;
 		this.customerRepository = customerRepository;
 	}
-
-
 	/**
 	 * @param customerDto
 	 */
@@ -45,7 +44,7 @@ public class AccountsServiceImpl implements IAccountsService {
 					+customerDto.getMobileNumber());
 		}
 		customer.setCreatedAt(LocalDateTime.now());
-		customer.setCreatedBy("Ahmed Saifi");
+		customer.setCreatedBy("Anonymous");
 		Customer savedCustomer = customerRepository.save(customer);
 		accountsRepository.save(createNewAccount(savedCustomer));
 	}
@@ -67,8 +66,6 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setCreatedBy("Annonymous");
         return newAccount;
     }
-
-
 	@Override
 	public CustomerDto fetchAccount(String mobileNumer) {
 		Customer customer = customerRepository.findByMobileNumber(mobileNumer).orElseThrow(
@@ -80,6 +77,23 @@ public class AccountsServiceImpl implements IAccountsService {
 		return customerDto;
 		
 	}
-
-
+	@Override
+	public boolean updateAccount(CustomerDto customerDto) {
+		boolean isUpdated = false;
+		AccountsDto accountsDto = customerDto.getAccountsDto();
+		if(accountsDto!=null) {
+			Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
+					()->new ResourceNotFoundException("Account", "account number", String.valueOf(accountsDto.getAccountNumber())));		
+			AccountsMapper.mapToAccounts(accountsDto,accounts);
+			accountsRepository.save(accounts);
+			
+			Long customerId = accounts.getCustomerId();
+			Customer customer = customerRepository.findById(customerId).orElseThrow(
+					()->new ResourceNotFoundException("Customer", "CustomerId", customerId.toString()));
+			CustomerMapper.mapToCustomer(customerDto, customer);
+			customerRepository.save(customer);
+			isUpdated=true;
+		}
+		return isUpdated;
+	}
 }
