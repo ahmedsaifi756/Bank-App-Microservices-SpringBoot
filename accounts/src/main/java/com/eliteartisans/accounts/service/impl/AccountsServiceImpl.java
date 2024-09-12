@@ -7,10 +7,13 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.eliteartisans.accounts.constants.AccountsConstants;
+import com.eliteartisans.accounts.dto.AccountsDto;
 import com.eliteartisans.accounts.dto.CustomerDto;
 import com.eliteartisans.accounts.entity.Accounts;
 import com.eliteartisans.accounts.entity.Customer;
 import com.eliteartisans.accounts.exception.CustomerAlreadyExistsException;
+import com.eliteartisans.accounts.exception.ResourceNotFoundException;
+import com.eliteartisans.accounts.mapper.AccountsMapper;
 import com.eliteartisans.accounts.mapper.CustomerMapper;
 import com.eliteartisans.accounts.repository.AccountsRepository;
 import com.eliteartisans.accounts.repository.CustomerRepository;
@@ -61,8 +64,22 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
         
         newAccount.setCreatedAt(LocalDateTime.now());
-        newAccount.setCreatedBy("Ahmed saifi");
+        newAccount.setCreatedBy("Annonymous");
         return newAccount;
     }
+
+
+	@Override
+	public CustomerDto fetchAccount(String mobileNumer) {
+		Customer customer = customerRepository.findByMobileNumber(mobileNumer).orElseThrow(
+				()->new ResourceNotFoundException("Customer", "mobileNumer", mobileNumer));
+		Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+				()->new ResourceNotFoundException("Accounts", "customerId", String.valueOf(customer.getCustomerId())));
+		CustomerDto customerDto =CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+		customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
+		return customerDto;
+		
+	}
+
 
 }
