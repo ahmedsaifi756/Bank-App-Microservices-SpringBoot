@@ -1,12 +1,19 @@
 package com.eliteartisans.accounts.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class CustomerDto {
 	
+	@NotEmpty(message = "name cannot be null or empty")
+	@Size(min = 5, max = 30, message = "the length of the customer name should be between 5 to 30 charactor only")
 	private String name;
-	
-	private String email;
-	
+	@NotEmpty(message = "Email cannot be empty or null")
+	@Email(message = "Email address should be valid")
+	private String email;	
+	@Pattern(regexp ="(^$|[0-9]{10})",message = "mobile no should be 10 digit nos")
 	private String mobileNumber;
 	
 	private AccountsDto accountsDto;

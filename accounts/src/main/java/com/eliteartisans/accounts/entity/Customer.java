@@ -12,7 +12,7 @@ public class Customer extends BaseEntity {
 	
 	@Id@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long customerId;
+	private Long customerId;
 	@Column@NotNull
 	private String name;
 	@Column@NotNull
@@ -23,17 +23,17 @@ public class Customer extends BaseEntity {
 	public Customer() {
 		super();
 	}
-	public Customer(long customerId, @NotNull String name, @NotNull String email, @NotNull String mobileNumber) {
+	public Customer(Long customerId, @NotNull String name, @NotNull String email, @NotNull String mobileNumber) {
 		super();
 		this.customerId = customerId;
 		this.name = name;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
 	}
-	public long getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 	public String getName() {

@@ -4,9 +4,10 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,20 +20,23 @@ import com.eliteartisans.accounts.dto.CustomerDto;
 import com.eliteartisans.accounts.dto.ResponseDto;
 import com.eliteartisans.accounts.service.IAccountsService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+
 
 @RestController
 @RequestMapping(path = "/api",produces = {MediaType.APPLICATION_JSON_VALUE})
+@Validated
 public class AccountsController {
 	
 	private IAccountsService iAccountsService;
-	
 	public AccountsController(IAccountsService iAccountsService) {
 		super();
 		this.iAccountsService = iAccountsService;
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<ResponseDto> createAccount(@RequestBody CustomerDto customerDto){
+	public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto){
 		iAccountsService.createAccount(customerDto);
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
@@ -40,13 +44,15 @@ public class AccountsController {
 	}
 	
 	@GetMapping("/fetch")
-	public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam String mobileNumber){
+	public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
+										@Pattern(regexp ="(^$|[0-9]{10})",message = "mobile no should be 10 digit nos") 
+										String mobileNumber){
 		CustomerDto customerDto = iAccountsService.fetchAccount(mobileNumber);
 		return ResponseEntity.status(HttpStatus.OK).body(customerDto);
 		
 	}
 	@PutMapping("/update")
-	public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody CustomerDto customerDto){
+	public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto){
 		boolean isUpdated = iAccountsService.updateAccount(customerDto);
 		if(isUpdated) {
 			return ResponseEntity
@@ -59,7 +65,9 @@ public class AccountsController {
 		}
 	}
 	@DeleteMapping("/delete")
-	public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam String mobileNumber){
+	public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam 
+											@Pattern(regexp ="(^$|[0-9]{10})",message = "mobile no should be 10 digit nos")
+											String mobileNumber){
 		boolean isDeleted = iAccountsService.deleteAccount(mobileNumber);
 		if(isDeleted) {
 			return ResponseEntity
