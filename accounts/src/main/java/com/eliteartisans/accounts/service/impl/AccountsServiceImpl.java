@@ -43,8 +43,6 @@ public class AccountsServiceImpl implements IAccountsService {
 			throw new CustomerAlreadyExistsException("Customer already registered with given mobile number"
 					+customerDto.getMobileNumber());
 		}
-		customer.setCreatedAt(LocalDateTime.now());
-		customer.setCreatedBy("Anonymous");
 		Customer savedCustomer = customerRepository.save(customer);
 		accountsRepository.save(createNewAccount(savedCustomer));
 	}
@@ -61,9 +59,6 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(AccountsConstants.SAVINGS);
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
-        
-        newAccount.setCreatedAt(LocalDateTime.now());
-        newAccount.setCreatedBy("Annonymous");
         return newAccount;
     }
 	@Override
@@ -71,7 +66,7 @@ public class AccountsServiceImpl implements IAccountsService {
 		Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
 				()->new ResourceNotFoundException("Customer", "mobileNumer", mobileNumber));
 		Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
-				()->new ResourceNotFoundException("Accounts", "customerId", String.valueOf(customer.getCustomerId())));
+				()->new ResourceNotFoundException("Accounts", "customerId", customer.getCustomerId().toString()));
 		CustomerDto customerDto =CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
 		customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
 		return customerDto;
@@ -83,7 +78,7 @@ public class AccountsServiceImpl implements IAccountsService {
 		AccountsDto accountsDto = customerDto.getAccountsDto();
 		if(accountsDto!=null) {
 			Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
-					()->new ResourceNotFoundException("Account", "account number", String.valueOf(accountsDto.getAccountNumber())));		
+					()->new ResourceNotFoundException("Account", "account number", accountsDto.getAccountNumber().toString()));		
 			AccountsMapper.mapToAccounts(accountsDto,accounts);
 			accountsRepository.save(accounts);
 			

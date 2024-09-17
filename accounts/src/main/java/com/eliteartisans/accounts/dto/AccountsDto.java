@@ -1,19 +1,26 @@
 package com.eliteartisans.accounts.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+
 
 public class AccountsDto {
 	
-	private long accountNumber;
+	@NotEmpty(message = "account no cannot be null")
+	@Pattern(regexp ="(^$|[0-9]{10})",message = "account no should be 10 digit nos")
+	private Long accountNumber;
 	
+	@NotEmpty(message = "account type cannot be null or empty")
 	private String accountType;
 	
+	@NotEmpty(message = "branch adress cannot be empty or null")
 	private String branchAddress;
 
-	public long getAccountNumber() {
+	public Long getAccountNumber() {
 		return accountNumber;
 	}
 
-	public void setAccountNumber(long accountNumber) {
+	public void setAccountNumber(Long accountNumber) {
 		this.accountNumber = accountNumber;
 	}
 
