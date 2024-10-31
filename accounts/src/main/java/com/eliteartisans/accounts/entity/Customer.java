@@ -6,7 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 public class Customer extends BaseEntity {
 	
@@ -19,44 +25,4 @@ public class Customer extends BaseEntity {
 	private String email;
 	@Column@NotNull
 	private String mobileNumber;
-	
-	public Customer() {
-		super();
-	}
-	public Customer(Long customerId, @NotNull String name, @NotNull String email, @NotNull String mobileNumber) {
-		super();
-		this.customerId = customerId;
-		this.name = name;
-		this.email = email;
-		this.mobileNumber = mobileNumber;
-	}
-	public Long getCustomerId() {
-		return customerId;
-	}
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-	@Override
-	public String toString() {
-		return "Customer [customerId=" + customerId + ", name=" + name + ", email=" + email + ", mobileNumber="
-				+ mobileNumber + "]";
-	}	
 }
