@@ -24,7 +24,7 @@ public class ErrorResponseDto {
 			)
 	private String erroMsg;
 	@Schema(
-			description = "Error time of the error"
+			description = "Error time of the error "
 			)
 	private LocalDateTime errorTime;
 	
