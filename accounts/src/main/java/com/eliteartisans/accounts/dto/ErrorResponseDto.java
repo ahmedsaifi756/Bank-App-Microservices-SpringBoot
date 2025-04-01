@@ -20,7 +20,7 @@ public class ErrorResponseDto {
 			)
 	private HttpStatus errorCode;
 	@Schema(
-			description = "Error msg of the error"
+			description = "Error msg of the error "
 			)
 	private String erroMsg;
 	@Schema(
